@@ -1,14 +1,111 @@
-<h1>Hello, world!</h1>
-<p>Welcome to your new single-page application, built with:</p>
-<ul>
-  <li><a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a> for cross-platform server-side code</li>
-  <li><a href='https://angular.io/'>Angular</a> and <a href='http://www.typescriptlang.org/'>TypeScript</a> for client-side code</li>
-  <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
-</ul>
-<p>To help you get started, we've also set up:</p>
-<ul>
-  <li><strong>Client-side navigation</strong>. For example, click <em>Counter</em> then <em>Back</em> to return here.</li>
-  <li><strong>Angular CLI integration</strong>. In development mode, there's no need to run <code>ng serve</code>. It runs in the background automatically, so your client-side resources are dynamically built on demand and the page refreshes when you modify any file.</li>
-  <li><strong>Efficient production builds</strong>. In production mode, development-time features are disabled, and your <code>dotnet publish</code> configuration automatically invokes <code>ng build</code> to produce minified, ahead-of-time compiled JavaScript files.</li>
-</ul>
-<p>The <code>ClientApp</code> subdirectory is a standard Angular CLI application. If you open a command prompt in that directory, you can run any <code>ng</code> command (e.g., <code>ng test</code>), or use <code>npm</code> to install extra packages into it.</p>
+<h2>Configurable Field Exercise!</h2>
+<!--User Input Section-->
+<hr/>
+<div class="alert alert-light" role="alert">
+  <form [formGroup]="userInputs" (ngSubmit)="onSubmit()">
+    <div class="row border border-secondary " align="left">
+      <div class="col-sm-6 border-right border-secondary">
+        <div class="row">
+          <div class="col-sm-12">
+            <span>Allows a user to specify a sequence of input fields to be rendered on the page. These fields are displayed on the page in a grid-like layout with the number of columns, as specified by the user.</span>
+            <br />
+            <br />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">Input text string for controls.</div>
+          <div class="col-sm-6">
+            <input text="text" formControlName="key">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">Please input columns</div>
+          <div class="col-sm-6"><input text="text" formControlName="columns" value="1" pattern="/^([12346]|1[2])$/"><br />Valid Values [1,2,3,4,6,12]</div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12"><input type="submit" value="Process" class="btn btn-outline-dark" /></div>
+        </div>
+      </div>
+      <div class="col-sm-6" align="left">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Input Char</th>
+              <th scope="col">Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>t</td>
+              <td>TextBox</td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>c</td>
+              <td>Checkbox</td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td>p</td>
+              <td>Password</td>
+
+            </tr>
+            <tr>
+              <th scope="row">4</th>
+              <td>r</td>
+              <td>Radio</td>
+            </tr>
+          <tr>
+            <th scope="row">5</th>
+            <td>b</td>
+            <td>Button</td>
+          </tr>
+          <tr>
+            <th scope="row">6</th>
+            <td>d</td>
+            <td>Date</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </form>
+</div>
+<!--Configurable input fields Section-->
+<hr />
+<div class="alert alert-light" role="alert">
+  <div class="row">
+    <div *ngFor="let inputField of inputFields" class="col-sm-{{12/this.userInputs.controls['columns'].value}} border border-dark">
+      <div [ngSwitch]="inputField.controlType" align="center">
+        <label [attr.for]="inputField.key" class="font-weight-bold text-uppercase">{{inputField.label}}</label><br />
+        <input *ngSwitchCase="'textbox'" [id]="inputField.key" [type]="inputField.type" class="form-control">
+        <input *ngSwitchCase="'radio'" [id]="inputField.key" [type]="inputField.controlType" >
+        <input *ngSwitchCase="'checkbox'" [id]="inputField.key" [type]="inputField.controlType">
+        <input *ngSwitchCase="'password'" [id]="inputField.key" [type]="inputField.controlType" class="form-control">
+        <input *ngSwitchCase="'button'" [id]="inputField.key" [type]="inputField.controlType" value="Button" class="btn btn-outline-dark form-control">
+        <input *ngSwitchCase="'date'" [type]="inputField.controlType"  [id]="inputField.key" class="btn btn-outline-secondary form-control">      
+        
+      </div>
+    </div>
+   
+  </div>
+</div>
+<!--Debug Section-->
+<hr />
+<div class="alert alert-light" role="alert">
+  <h3>Debug:</h3>
+  Input Elements:::{{inputFields.length}}<br />
+  Input Columns:::{{this.userInputs.controls['columns'].value}};
+  <div *ngIf="!isValid">
+    <div class="alert alert-secondary" role="alert">
+      Invalid Input. Offending Input Ignored!
+    </div>
+  </div>
+  <div *ngIf="!isInputColumnValid">
+    <div class="alert alert-secondary" role="alert">
+      Invalid Input Columns. Valid values are 1,2,3,4,6,12!
+    </div>
+  </div>
+</div>
